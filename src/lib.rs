@@ -60,10 +60,10 @@ impl Sane {
 		Self::init(version_code)
 	}
 
-	pub fn get_devices(&self) -> Result<Vec<Device>> {
+	pub fn get_devices(&self, local_only: bool) -> Result<Vec<Device>> {
 		let mut device_list: *mut *const sys::Device = std::ptr::null_mut();
 		let status: sys::Status =
-			unsafe { sys::sane_get_devices(&mut device_list as *mut *mut *const sys::Device, 1) };
+			unsafe { sys::sane_get_devices(&mut device_list as *mut *mut *const sys::Device, local_only as i32) };
 		if status != sys::Status::Good {
 			return Err(Error(status));
 		}

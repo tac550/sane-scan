@@ -275,9 +275,10 @@ impl DeviceHandle {
 	pub fn read_to_vec(&mut self) -> Result<Vec<u8>> {
 		let parameters = self.get_parameters()?;
 
-		let mut image = Vec::<u8>::with_capacity(
-			parameters.bytes_per_line as usize * parameters.lines as usize,
-		);
+		let mut image = match parameters.lines {
+			-1 => Vec::<u8>::new(),
+			_ => Vec::<u8>::with_capacity(parameters.bytes_per_line as usize * parameters.lines as usize)
+		};
 
 		let mut buf = Vec::<u8>::with_capacity(1024 * 1024);
 		unsafe {
